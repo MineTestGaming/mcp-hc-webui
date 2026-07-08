@@ -110,7 +110,7 @@ export function PlayerControls({ status }: PlayerControlsProps) {
   return (
     <Paper variant="outlined" sx={{ p: 2 }}>
       {/* Seek bar */}
-      <Box sx={{ px: 1, mb: 1 }}>
+      <Box sx={{ px: 1, mb: 0.5 }}>
         <Slider
           value={seekPercentValue}
           onChange={handleSeekChange}
@@ -121,6 +121,16 @@ export function PlayerControls({ status }: PlayerControlsProps) {
           size="small"
           aria-label="播放进度"
         />
+      </Box>
+
+      {/* Time display */}
+      <Box sx={{ px: 1, mb: 1, display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="caption" fontFamily="monospace">
+          {status?.position ?? '00:00:00'}
+        </Typography>
+        <Typography variant="caption" fontFamily="monospace">
+          {status?.duration ?? '00:00:00'}
+        </Typography>
       </Box>
 
       {/* Control buttons */}

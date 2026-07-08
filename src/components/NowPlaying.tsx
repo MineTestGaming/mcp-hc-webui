@@ -39,14 +39,6 @@ export function NowPlaying({ status }: NowPlayingProps) {
         <Typography variant="body2" color="text.secondary" noWrap>
           {status.fullPath}
         </Typography>
-        <Box mt={1} display="flex" justifyContent="space-between">
-          <Typography variant="body2" fontFamily="monospace">
-            {status.position}
-          </Typography>
-          <Typography variant="body2" fontFamily="monospace">
-            {status.duration}
-          </Typography>
-        </Box>
       </CardContent>
     </Card>
   );
