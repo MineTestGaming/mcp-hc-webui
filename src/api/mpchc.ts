@@ -69,7 +69,7 @@ export async function getStatus(): Promise<PlayerStatus | null> {
   if (!match) return null;
 
   // Parse arguments respecting quoted strings
-  const args = parseOnStatusArgs(match[1]);
+  const args = parseOnStatusArgs(match[1]!);
   if (args.length < 9) return null;
 
   return {

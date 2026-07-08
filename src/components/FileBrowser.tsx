@@ -22,7 +22,7 @@ import {
 } from '@mui/icons-material';
 import { useFileBrowser } from '../hooks/useFileBrowser';
 
-const MEDIA_EXTENSIONS: Record<string, string[]> = {
+const MEDIA_EXTENSIONS: { video: string[]; audio: string[]; image: string[] } = {
   video: ['mkv', 'mp4', 'avi', 'wmv', 'mov', 'flv', 'webm', 'ts', 'm2ts', 'mpg', 'mpeg', 'vob'],
   audio: ['mp3', 'flac', 'aac', 'wav', 'ogg', 'wma', 'm4a', 'opus'],
   image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'],
