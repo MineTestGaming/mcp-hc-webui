@@ -17,6 +17,9 @@ import {
   FastForward as JumpForwardIcon,
   VolumeUp as VolumeIcon,
   VolumeOff as MuteIcon,
+  Fullscreen as FullscreenIcon,
+  Close as CloseFileIcon,
+  PowerSettingsNew as PowerIcon,
 } from '@mui/icons-material';
 import { sendCommand, seekPercent, setVolume } from '../api/mpchc';
 import type { PlayerStatus } from '../api/mpchc';
@@ -90,6 +93,20 @@ export function PlayerControls({ status }: PlayerControlsProps) {
     void sendCommand(909);
   }, []);
 
+  const handleFullscreen = useCallback(() => {
+    void sendCommand(830);
+  }, []);
+
+  const handleCloseFile = useCallback(() => {
+    void sendCommand(804);
+  }, []);
+
+  const handleCloseApp = useCallback(() => {
+    if (window.confirm('确定要关闭 MPC-HC 吗？')) {
+      void sendCommand(816).then(() => window.close());
+    }
+  }, []);
+
   return (
     <Paper variant="outlined" sx={{ p: 2 }}>
       {/* Seek bar */}
@@ -154,6 +171,19 @@ export function PlayerControls({ status }: PlayerControlsProps) {
         <Typography variant="caption" fontFamily="monospace" sx={{ minWidth: 32 }}>
           {Math.round(currentVolume)}%
         </Typography>
+      </Stack>
+
+      {/* Utility buttons */}
+      <Stack direction="row" spacing={1} justifyContent="center" sx={{ mt: 1.5 }}>
+        <IconButton onClick={handleFullscreen} color="inherit" size="small" title="全屏">
+          <FullscreenIcon fontSize="small" />
+        </IconButton>
+        <IconButton onClick={handleCloseFile} color="inherit" size="small" title="关闭文件">
+          <CloseFileIcon fontSize="small" />
+        </IconButton>
+        <IconButton onClick={handleCloseApp} color="error" size="small" title="关闭播放器">
+          <PowerIcon fontSize="small" />
+        </IconButton>
       </Stack>
     </Paper>
   );
