@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Agent(general-purpose)",
+      "WebFetch(raw.githubusercontent.com)",
+      "WebFetch(www.google.com)"
+    ]
+  },
+  "$version": 4
+}
