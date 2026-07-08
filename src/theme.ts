@@ -11,7 +11,28 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif',
+    fontFamily: '"Roboto", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif',
   },
-  shape: { borderRadius: 12 },
+  shape: { borderRadius: 4 },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: { borderRadius: 12 },
+      },
+    },
+    MuiBottomNavigation: {
+      styleOverrides: {
+        root: { height: 56 },
+      },
+    },
+    MuiBottomNavigationAction: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            color: 'var(--mui-palette-primary-main)',
+          },
+        },
+      },
+    },
+  },
 });

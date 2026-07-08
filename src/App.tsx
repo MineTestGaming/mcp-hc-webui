@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import {
-  Tabs,
-  Tab,
-  Box,
+  AppBar,
+  Toolbar,
   Typography,
-  Container,
+  Box,
+  BottomNavigation,
+  BottomNavigationAction,
   Alert,
 } from '@mui/material';
 import {
-  Remote as RemoteIcon,
+  SettingsRemote as RemoteIcon,
   FolderOpen as FolderIcon,
 } from '@mui/icons-material';
 import { useStatus } from './hooks/useStatus';
@@ -21,50 +22,47 @@ export function App() {
   const { status, error } = useStatus(1000);
 
   return (
-    <Container maxWidth="sm" sx={{ py: 2 }}>
-      {/* Header */}
-      <Typography variant="h5" fontWeight="bold" mb={2} textAlign="center">
-        MPC-HC Remote
-      </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {/* Top App Bar */}
+      <AppBar position="fixed" elevation={0} color="primary">
+        <Toolbar>
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
+            MPC-HC Remote
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Toolbar /> {/* Spacer for fixed AppBar */}
 
       {/* Connection error */}
       {error && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <Alert severity="warning" sx={{ mx: 2, mt: 2 }}>
           {error}
         </Alert>
       )}
 
-      {/* Player section */}
-      <NowPlaying status={status} />
-      <Box mt={2}>
-        <PlayerControls status={status} />
+      {/* Content area */}
+      <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+        {tab === 0 && (
+          <>
+            <NowPlaying status={status} />
+            <Box mt={2}>
+              <PlayerControls status={status} />
+            </Box>
+          </>
+        )}
+        {tab === 1 && <FileBrowser />}
       </Box>
 
-      {/* Tab switcher */}
-      <Tabs
+      {/* Bottom Navigation */}
+      <BottomNavigation
         value={tab}
         onChange={(_, v) => setTab(v)}
-        variant="fullWidth"
-        sx={{ mt: 3 }}
+        showLabels
+        sx={{ borderTop: 1, borderColor: 'divider' }}
       >
-        <Tab icon={<RemoteIcon />} label="控制" />
-        <Tab icon={<FolderIcon />} label="文件" />
-      </Tabs>
-
-      {/* Tab content */}
-      {tab === 0 && (
-        <Box pt={2}>
-          {/* Future: extra controls (audio track, subtitle, zoom, etc.) */}
-          <Typography variant="body2" color="text.secondary" textAlign="center">
-            播放控制已在上方面板
-          </Typography>
-        </Box>
-      )}
-      {tab === 1 && (
-        <Box pt={2}>
-          <FileBrowser />
-        </Box>
-      )}
-    </Container>
+        <BottomNavigationAction label="正在播放" icon={<RemoteIcon />} />
+        <BottomNavigationAction label="文件" icon={<FolderIcon />} />
+      </BottomNavigation>
+    </Box>
   );
 }
