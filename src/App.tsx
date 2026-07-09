@@ -40,8 +40,8 @@ export function App() {
         </Alert>
       )}
 
-      {/* Content area */}
-      <Box sx={{ flex: 1, overflow: 'auto', p: 2 }}>
+      {/* Content area — pb adds space so content isn't hidden behind the fixed bottom nav */}
+      <Box sx={{ flex: 1, overflow: 'auto', p: 2, pb: 10 }}>
         {tab === 0 && (
           <>
             <NowPlaying status={status} />
@@ -53,12 +53,12 @@ export function App() {
         {tab === 1 && <FileBrowser />}
       </Box>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation — fixed to viewport bottom */}
       <BottomNavigation
         value={tab}
         onChange={(_, v) => setTab(v)}
         showLabels
-        sx={{ borderTop: 1, borderColor: 'divider' }}
+        sx={{ position: 'fixed', bottom: 0, left: 0, right: 0, borderTop: 1, borderColor: 'divider', zIndex: (t) => t.zIndex.drawer + 1 }}
       >
         <BottomNavigationAction label="正在播放" icon={<RemoteIcon />} />
         <BottomNavigationAction label="文件" icon={<FolderIcon />} />
