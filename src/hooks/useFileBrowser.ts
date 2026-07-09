@@ -35,6 +35,15 @@ export function useFileBrowser(initialPath = 'C:\\'): UseFileBrowserResult {
   }, []);
 
   const goUp = useCallback(async () => {
+    // "Root" or empty means we're already at the drive list — nothing to go up to
+    if (!currentPath || currentPath === 'Root') return;
+
+    // Drive root (e.g. "C:\") → navigate to empty path to show all drives
+    if (/^[A-Z]:\\?$/i.test(currentPath)) {
+      await navigate('');
+      return;
+    }
+
     const parentPath = currentPath.endsWith('\\')
       ? currentPath + '..'
       : currentPath + '\\..';

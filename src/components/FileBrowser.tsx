@@ -44,14 +44,18 @@ export function FileBrowser() {
     void navigate('C:\\');
   }, [navigate]);
 
+  const isRoot = !currentPath || currentPath === 'Root';
+
   // currentPath is always in decoded form
-  const breadcrumbParts = currentPath
-    .split('\\')
-    .filter(Boolean)
-    .map((part, idx, arr) => {
-      const slice = arr.slice(0, idx + 1).join('\\') + '\\';
-      return { label: part, path: slice };
-    });
+  const breadcrumbParts = isRoot
+    ? []
+    : currentPath
+        .split('\\')
+        .filter(Boolean)
+        .map((part, idx, arr) => {
+          const slice = arr.slice(0, idx + 1).join('\\') + '\\';
+          return { label: part, path: slice };
+        });
 
   const handleDirClick = (entry: typeof entries[0]) => {
     if (entry.isDirectory) {
@@ -65,12 +69,14 @@ export function FileBrowser() {
     <Box>
       {/* Breadcrumb navigation */}
       <Box display="flex" alignItems="center" gap={1} px={1} pb={1}>
-        <IconButton onClick={() => void goUp()} size="small" title="上级目录">
-          <UpIcon />
-        </IconButton>
+        {!isRoot && (
+          <IconButton onClick={() => void goUp()} size="small" title="上级目录">
+            <UpIcon />
+          </IconButton>
+        )}
         <Breadcrumbs separator="\" maxItems={4}>
           <Typography variant="body2" color="text.secondary">
-            {currentPath ? 'Root' : currentPath}
+            Root
           </Typography>
           {breadcrumbParts.map((part) => (
             <Typography

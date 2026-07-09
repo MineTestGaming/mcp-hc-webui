@@ -159,6 +159,8 @@ function parseBrowserHtml(html: string): BrowseResult {
     if (!link) continue;
 
     const name = link.textContent ?? '';
+    if (name === '..') continue;
+
     const href = link.getAttribute('href') ?? '';
 
     // Extract path from href query param
