@@ -38,15 +38,14 @@ function getFileIcon(name: string) {
 
 export function FileBrowser() {
   const { entries, currentPath, loading, error, navigate, goUp, play } =
-    useFileBrowser('C:%5c');
+    useFileBrowser('C:\\');
 
   useEffect(() => {
-    void navigate('C:%5c');
+    void navigate('C:\\');
   }, [navigate]);
 
-  // Decode URL-encoded path for breadcrumbs
-  const decodedPath = decodeURIComponent(currentPath);
-  const breadcrumbParts = decodedPath
+  // currentPath is always in decoded form
+  const breadcrumbParts = currentPath
     .split('\\')
     .filter(Boolean)
     .map((part, idx, arr) => {
@@ -71,7 +70,7 @@ export function FileBrowser() {
         </IconButton>
         <Breadcrumbs separator="\" maxItems={4}>
           <Typography variant="body2" color="text.secondary">
-            {decodedPath ? 'Root' : decodedPath}
+            {currentPath ? 'Root' : currentPath}
           </Typography>
           {breadcrumbParts.map((part) => (
             <Typography
@@ -79,10 +78,7 @@ export function FileBrowser() {
               variant="body2"
               color="text.primary"
               sx={{ cursor: 'pointer' }}
-              onClick={() => void navigate(
-                encodeURIComponent(part.path)
-                  .replace(/%5C/gi, '%5c')
-              )}
+              onClick={() => void navigate(part.path)}
             >
               {part.label}
             </Typography>

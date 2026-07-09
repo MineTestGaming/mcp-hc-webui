@@ -119,10 +119,14 @@ function parseOnStatusArgs(raw: string): string[] {
 // File Browser
 // ---------------------------------------------------------------------------
 
-/** Browse a directory by path. Returns parsed file/directory entries. */
-export async function browseDirectory(path: string): Promise<FileEntry[]> {
-  const encoded = path.replace(/\\/g, '%5c').replace(/ /g, '%20');
-  const res = await fetch(`/browser.html?path=${encoded}`);
+export interface BrowseResult {
+  entries: FileEntry[];
+  resolvedPath: string;
+}
+
+/** Browse a directory by path. Returns parsed entries and the resolved absolute path. */
+export async function browseDirectory(path: string): Promise<BrowseResult> {
+  const res = await fetch(`/browser.html?path=${encodeURIComponent(path)}`);
   const html = await res.text();
   return parseBrowserHtml(html);
 }
@@ -137,10 +141,16 @@ export async function playFile(path: string): Promise<void> {
  * MPC-HC returns a table with rows: Name, Type, Size, Date Modified.
  * Directories have class="dirname", files have a class derived from extension.
  */
-function parseBrowserHtml(html: string): FileEntry[] {
+function parseBrowserHtml(html: string): BrowseResult {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  const rows = doc.querySelectorAll('table.browser-table tr');
+  const tables = doc.querySelectorAll('table.browser-table');
+
+  // First table contains "Location: <path>"
+  const locText = tables[0]?.querySelector('td')?.textContent ?? '';
+  const resolvedPath = locText.replace('Location:', '').trim();
+
+  const rows = tables[1]?.querySelectorAll('tr') ?? doc.querySelectorAll('table.browser-table tr');
 
   const entries: FileEntry[] = [];
 
@@ -166,5 +176,5 @@ function parseBrowserHtml(html: string): FileEntry[] {
     entries.push({ name, path: entryPath, isDirectory, type, size, dateModified });
   }
 
-  return entries;
+  return { entries, resolvedPath };
 }

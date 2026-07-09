@@ -14,7 +14,7 @@ interface UseFileBrowserResult {
 /**
  * Manage file browser state: current directory, entries, navigation.
  */
-export function useFileBrowser(initialPath = 'C:%5c'): UseFileBrowserResult {
+export function useFileBrowser(initialPath = 'C:\\'): UseFileBrowserResult {
   const [entries, setEntries] = useState<FileEntry[]>([]);
   const [currentPath, setCurrentPath] = useState(initialPath);
   const [loading, setLoading] = useState(false);
@@ -25,8 +25,8 @@ export function useFileBrowser(initialPath = 'C:%5c'): UseFileBrowserResult {
     setError(null);
     try {
       const result = await browseDirectory(path);
-      setEntries(result);
-      setCurrentPath(path);
+      setEntries(result.entries);
+      setCurrentPath(result.resolvedPath);
     } catch {
       setError('无法读取目录');
     } finally {
@@ -35,10 +35,9 @@ export function useFileBrowser(initialPath = 'C:%5c'): UseFileBrowserResult {
   }, []);
 
   const goUp = useCallback(async () => {
-    // Navigate to parent by appending %5c.. (URL-encoded \..)
-    const parentPath = currentPath.endsWith('%5c')
+    const parentPath = currentPath.endsWith('\\')
       ? currentPath + '..'
-      : currentPath + '%5c..';
+      : currentPath + '\\..';
     await navigate(parentPath);
   }, [currentPath, navigate]);
 
