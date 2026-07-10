@@ -21,6 +21,7 @@ import {
     Close as CloseFileIcon,
     PowerSettingsNew as PowerIcon,
     VisibilityOff as InvisibleIcon,
+    CameraAlt as ScreenshotIcon,
 } from "@mui/icons-material";
 import { sendCommand, seekPercent, setVolume } from "../api/mpchc";
 import type { PlayerStatus } from "../api/mpchc";
@@ -116,6 +117,23 @@ export function PlayerControls({ status }: PlayerControlsProps) {
 
     const handleBossKey = useCallback(() => {
         void sendCommand(944);
+    }, []);
+
+    const handleScreenshot = useCallback(async () => {
+        try {
+            const response = await fetch("/snapshot.jpg");
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `mpchc-snapshot-${Date.now()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } catch {
+            // ignored
+        }
     }, []);
 
     return (
@@ -246,6 +264,14 @@ export function PlayerControls({ status }: PlayerControlsProps) {
                 justifyContent="center"
                 sx={{ mt: 1.5 }}
             >
+                <IconButton
+                    onClick={handleScreenshot}
+                    color="inherit"
+                    size="small"
+                    title="截图"
+                >
+                    <ScreenshotIcon fontSize="small" />
+                </IconButton>
                 <IconButton
                     onClick={handleBossKey}
                     color="inherit"
