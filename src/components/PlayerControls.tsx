@@ -117,6 +117,7 @@ export function PlayerControls({ status }: PlayerControlsProps) {
 
     const handleBossKey = useCallback(() => {
         void sendCommand(944);
+        window.location.href = "https://teams.microsoft.com/";
     }, []);
 
     const handleScreenshot = useCallback(async () => {
